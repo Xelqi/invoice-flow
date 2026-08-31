@@ -1,8 +1,12 @@
-export default function Header() {
+type HeaderProps = {
+  title: string;
+};
+
+export default function Header({ title }: HeaderProps) {
   return (
     <header className="flex h-16 items-center justify-between border-b border-slate-800 bg-slate-900 px-8">
       <div>
-        <h2 className="text-xl font-semibold text-white">Dashboard</h2>
+        <h2 className="text-xl font-semibold text-white">{title}</h2>
       </div>
 
       <div className="flex items-center gap-4">

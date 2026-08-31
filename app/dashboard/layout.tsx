@@ -11,7 +11,7 @@ export default function DashboardLayout({
       <Sidebar />
 
       <div className="flex flex-1 flex-col">
-        <Header />
+        <Header title="Dashboard" />
 
         <main className="flex-1 p-8">{children}</main>
       </div>
