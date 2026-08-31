@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
@@ -15,9 +17,9 @@ export default function Home() {
           TypeScript and PostgreSQL.
         </p>
 
-        <button className="rounded-xl bg-violet-600 px-6 py-3 font-semibold transition hover:bg-violet-500">
+        <Link href="/dashboard" className="rounded-xl bg-violet-600 px-6 py-3 font-semibold transition hover:bg-violet-500">
           Open Dashboard
-        </button>
+        </Link>
       </section>
     </main>
   );
