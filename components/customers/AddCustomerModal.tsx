@@ -12,23 +12,10 @@ export default function AddCustomerModal() {
     company: "",
   });
 
-  function handleNameChange(e: ChangeEvent<HTMLInputElement>) {
+  function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     setForm({
       ...form,
-      name: e.target.value,
-    });
-  }
-
-  function handleEmailChange(e: ChangeEvent<HTMLInputElement>) {
-    setForm({
-      ...form,
-      email: e.target.value,
-    });
-  }
-  function handleCompanyChange(e: ChangeEvent<HTMLInputElement>) {
-    setForm({
-      ...form,
-      company: e.target.value,
+      [e.target.name]: e.target.value, // use square brackets to evaluate expression and use its value so it becomes company: e.target.value
     });
   }
 
@@ -36,6 +23,15 @@ export default function AddCustomerModal() {
     e.preventDefault();
 
     console.log(form);
+
+    // Reset fields after submission
+    setForm({
+      name: "",
+      email: "",
+      company: "",
+    });
+    // Close form
+    setOpen(false);
   }
 
   return (
@@ -55,24 +51,27 @@ export default function AddCustomerModal() {
           <h2 className="text-xl font-bold text-white">New Customer</h2>
 
           <input
+            name="name"
             type="text"
             placeholder="Customer name"
             value={form.name}
-            onChange={handleNameChange}
+            onChange={handleInputChange}
             className="mt-4 w-full rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-white placeholder-slate-400"
           />
           <input
+            name="email"
             type="email"
             placeholder="Email address"
             value={form.email}
-            onChange={handleEmailChange}
+            onChange={handleInputChange}
             className="mt-3 w-full rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-white placeholder-slate-400"
           />
           <input
+            name="company"
             type="text"
             placeholder="Company"
             value={form.company}
-            onChange={handleCompanyChange}
+            onChange={handleInputChange}
             className="mt-3 w-full rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-white placeholder-slate-400"
           />
           <button
