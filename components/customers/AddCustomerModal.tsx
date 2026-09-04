@@ -4,7 +4,13 @@ import { useState } from "react";
 import { type ChangeEvent } from "react";
 import { type SubmitEvent } from "react";
 
-export default function AddCustomerModal() {
+type AddCustomerModalProps = {
+  createCustomer: (formData: FormData) => Promise<void>;
+};
+
+export default function AddCustomerModal({
+  createCustomer,
+}: AddCustomerModalProps) {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
     name: "",
@@ -19,10 +25,15 @@ export default function AddCustomerModal() {
     });
   }
 
-  function handleSubmit(e: SubmitEvent) {
+  async function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
 
-    console.log(form);
+    const formData = new FormData();
+    formData.append("name", form.name);
+    formData.append("email", form.email);
+    formData.append("company", form.company);
+
+    await createCustomer(formData);
 
     // Reset fields after submission
     setForm({
@@ -53,6 +64,7 @@ export default function AddCustomerModal() {
           <input
             name="name"
             type="text"
+            required
             placeholder="Customer name"
             value={form.name}
             onChange={handleInputChange}
@@ -61,6 +73,7 @@ export default function AddCustomerModal() {
           <input
             name="email"
             type="email"
+            required
             placeholder="Email address"
             value={form.email}
             onChange={handleInputChange}
@@ -69,6 +82,7 @@ export default function AddCustomerModal() {
           <input
             name="company"
             type="text"
+            required
             placeholder="Company"
             value={form.company}
             onChange={handleInputChange}

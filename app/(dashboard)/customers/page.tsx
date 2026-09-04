@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import CustomerTable from "@/components/customers/CustomerTable";
 import AddCustomerModal from "@/components/customers/AddCustomerModal";
+import { revalidatePath } from "next/cache";
 
 export default async function CustomersPage() {
   const customers = await prisma.customer.findMany({
@@ -8,6 +9,23 @@ export default async function CustomersPage() {
       createdAt: "desc",
     },
   });
+
+  async function createCustomer(formData: FormData) {
+    "use server";
+
+    const name = formData.get("name") as string;
+    const email = formData.get("email") as string;
+    const company = formData.get("company") as string;
+
+    await prisma.customer.create({
+      data: {
+        name,
+        email,
+        company,
+      },
+    });
+    revalidatePath("/customers");
+  }
 
   return (
     <>
@@ -17,7 +35,7 @@ export default async function CustomersPage() {
           Manage your customer relationships.
         </p>
       </div>
-      <AddCustomerModal />
+      <AddCustomerModal createCustomer={createCustomer} />
       <CustomerTable customers={customers} />
     </>
   );
