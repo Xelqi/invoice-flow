@@ -19,18 +19,30 @@ export default async function CustomersPage() {
   ): Promise<CreateCustomerResult> {
     "use server";
 
+    const id = formData.get("id") as string | null;
     const name = formData.get("name") as string;
     const email = formData.get("email") as string;
     const company = formData.get("company") as string;
 
     try {
-      await prisma.customer.create({
-        data: {
-          name,
-          email,
-          company,
-        },
-      });
+      if (id) {
+        await prisma.customer.update({
+          where: { id },
+          data: {
+            name,
+            email,
+            company,
+          },
+        });
+      } else {
+        await prisma.customer.create({
+          data: {
+            name,
+            email,
+            company,
+          },
+        });
+      }
 
       revalidatePath("/customers");
       return { success: true };

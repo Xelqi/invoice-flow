@@ -30,19 +30,35 @@ export default function CustomersClient({
 }: CustomersClientProps) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [selectedCustomer, setSelectedCustomer] = useState<
+    Customer | undefined
+  >(undefined);
+
+  function handleEdit(customer: Customer) {
+    setSelectedCustomer(customer);
+    setOpen(true);
+  }
 
   return (
     <>
       <CustomerToolbar
         search={search}
         setSearch={setSearch}
-        onNewCustomer={() => setOpen(true)}
+        onNewCustomer={() => {
+          setSelectedCustomer(undefined);
+          setOpen(true);
+        }}
       />
-      <CustomerTable customers={customers} search={search} />
+      <CustomerTable
+        customers={customers}
+        search={search}
+        onEdit={handleEdit}
+      />
       <AddCustomerModal
         createCustomer={createCustomer}
         open={open}
         setOpen={setOpen}
+        customer={selectedCustomer}
       />
     </>
   );

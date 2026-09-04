@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { type ChangeEvent } from "react";
 import { type SubmitEvent } from "react";
 
 type CustomerForm = {
+  id: string;
   name: string;
   email: string;
   company: string;
@@ -38,6 +39,25 @@ export default function AddCustomerModal({
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
+  useEffect(() => {
+    if (customer) {
+      setForm({
+        name: customer.name,
+        email: customer.email,
+        company: customer.company,
+      });
+    } else {
+      setForm({
+        name: "",
+        email: "",
+        company: "",
+      });
+    }
+
+    setStatus("idle");
+    setErrorMessage("");
+  }, [customer, open]); // when new customer selected or modal opened
+
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     setForm({
       ...form,
@@ -54,6 +74,9 @@ export default function AddCustomerModal({
     e.preventDefault();
 
     const formData = new FormData();
+    if (customer) {
+      formData.append("id", customer.id);
+    }
     formData.append("name", form.name);
     formData.append("email", form.email);
     formData.append("company", form.company);
@@ -169,7 +192,9 @@ export default function AddCustomerModal({
         className="w-full max-w-md rounded-xl border border-slate-700 bg-slate-900 p-6"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-xl font-bold text-white">New Customer</h2>
+        <h2 className="text-xl font-bold text-white">
+          {customer ? "Edit Customer" : "New Customer"}
+        </h2>
         {status === "error" && (
           <div className="mt-3 rounded-lg border border-red-500/30 bg-red-500/10 p-3">
             <p className="text-sm text-red-300">{errorMessage}</p>
@@ -208,7 +233,7 @@ export default function AddCustomerModal({
             type="submit"
             className="flex-1 rounded-lg bg-violet-600 py-2 font-medium text-white hover:bg-violet-500"
           >
-            Save Customer
+            {customer ? "Save Changes" : "Add Customer"}
           </button>
           <button
             type="button"

@@ -14,11 +14,13 @@ type Customer = {
 type CustomerTableProps = {
   customers: Customer[];
   search: string;
+  onEdit: (customer: Customer) => void;
 };
 
 export default function CustomerTable({
   customers,
   search,
+  onEdit,
 }: CustomerTableProps) {
   const filteredCustomers = customers.filter(
     (customer) =>
@@ -71,7 +73,10 @@ export default function CustomerTable({
                     <StatusBadge status={customer.status} />
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <button className="text-sm text-slate-400 hover:text-white">
+                    <button
+                      onClick={() => onEdit(customer)}
+                      className="text-sm text-slate-400 hover:text-white"
+                    >
                       Edit
                     </button>
                   </td>
