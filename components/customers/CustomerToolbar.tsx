@@ -5,11 +5,13 @@ import { Search, Plus } from "lucide-react";
 type CustomerToolbarProps = {
   search: string;
   setSearch: (value: string) => void;
+  onNewCustomer: () => void;
 };
 
 export default function CustomerToolbar({
   search,
   setSearch,
+  onNewCustomer,
 }: CustomerToolbarProps) {
   return (
     <div className="mb-6 flex items-center justify-between gap-4">
@@ -25,7 +27,10 @@ export default function CustomerToolbar({
         />
       </div>
 
-      <button className="flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-violet-500">
+      <button
+        onClick={onNewCustomer}
+        className="flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-violet-500"
+      >
         <Plus className="h-4 w-4" />
         New Customer
       </button>

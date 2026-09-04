@@ -13,10 +13,13 @@ type Customer = {
 
 type CustomerTableProps = {
   customers: Customer[];
+  search: string;
 };
 
-export default function CustomerTable({ customers }: CustomerTableProps) {
-  const [search, setSearch] = useState("");
+export default function CustomerTable({
+  customers,
+  search,
+}: CustomerTableProps) {
   const filteredCustomers = customers.filter(
     (customer) =>
       customer.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -26,7 +29,6 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
 
   return (
     <>
-      <CustomerToolbar search={search} setSearch={setSearch} />
       <div className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900">
         <table className="min-w-full">
           <thead className="bg-slate-800/50">

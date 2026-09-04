@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import CustomerTable from "@/components/customers/CustomerTable";
-import AddCustomerModal from "@/components/customers/AddCustomerModal";
 import { revalidatePath } from "next/cache";
+import CustomersClient from "@/components/customers/CustomersClient";
 
 export default async function CustomersPage() {
   const customers = await prisma.customer.findMany({
@@ -10,20 +9,44 @@ export default async function CustomersPage() {
     },
   });
 
-  async function createCustomer(formData: FormData) {
+  type CreateCustomerResult = {
+    success: boolean;
+    error?: string;
+  };
+
+  async function createCustomer(
+    formData: FormData,
+  ): Promise<CreateCustomerResult> {
     "use server";
 
     const name = formData.get("name") as string;
     const email = formData.get("email") as string;
     const company = formData.get("company") as string;
 
-    await prisma.customer.create({
-      data: {
-        name,
-        email,
-        company,
-      },
-    });
+    try {
+      await prisma.customer.create({
+        data: {
+          name,
+          email,
+          company,
+        },
+      });
+
+      revalidatePath("/customers");
+      return { success: true };
+    } catch (error) {
+      if (error instanceof Error && "code" in error && error.code === "P2002") {
+        return {
+          success: false,
+          error: "A customer with this email already exists.",
+        };
+      }
+
+      return {
+        success: false,
+        error: "Something went wrong.",
+      };
+    }
     revalidatePath("/customers");
   }
 
@@ -35,8 +58,7 @@ export default async function CustomersPage() {
           Manage your customer relationships.
         </p>
       </div>
-      <AddCustomerModal createCustomer={createCustomer} />
-      <CustomerTable customers={customers} />
+      <CustomersClient customers={customers} createCustomer={createCustomer} />
     </>
   );
 }
