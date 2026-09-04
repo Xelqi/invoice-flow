@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import CustomerTable from "@/components/customers/CustomerTable";
+import AddCustomerModal from "@/components/customers/AddCustomerModal";
 
 export default async function CustomersPage() {
   const customers = await prisma.customer.findMany({
@@ -16,6 +17,7 @@ export default async function CustomersPage() {
           Manage your customer relationships.
         </p>
       </div>
+      <AddCustomerModal />
       <CustomerTable customers={customers} />
     </>
   );
